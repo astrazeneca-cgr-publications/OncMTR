@@ -1,4 +1,5 @@
-# -- Workflow --
+## Workflow
+```
 - cd data/clinvar/vcf_GRCh38
   process_clinvar.py  
 
@@ -22,29 +23,8 @@
 
 
   subset_clinvar_all_annotations.py
-
-
-
-
-
-## Legacy
-### Filter out somatic variants from ClinVar
-
-- Number of entries of somatic origin
-```
-cat clinvar.vcf | grep "ORIGIN=2" | wc -l
 ```
 
-- Make sure ORIGIN has a single value (Confirmed)
-```
-cat clinvar.vcf | grep "ORIGIN" | cut -f8 | sed -E 's/.*(ORIGIN=.*).*/\1/' | sed 's/;.*//' | sort | uniq
-```
-
-
--------------------------------------------------
-
-> TODO: 
-- capture MC (molecular consequences field)
 
 
 
