@@ -3,7 +3,7 @@
 `data_dir = ../../data/ensembl`
 
 1. Extract sequences for each exon:
-# (call keep_canonical_transcripts.py within it and ajust input/output files accordingly if looking into canonical transcripts only)
+#### (call keep_canonical_transcripts.py within it and with input/output files accordingly if looking into canonical transcripts only)
 ```
 ./get_seqs_for_exons.sh   
 ```
