@@ -2,6 +2,3 @@
 ```
 python get_pathogenic_clinvar_hits.py
 ```
-
-# [After running snpEff on clinvar pathogenic variants]
-# 
