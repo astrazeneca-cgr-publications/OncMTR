@@ -1,6 +1,5 @@
 # OncMTR
-
-OncMTR score calculated from the gnomAD (v2) cohort:
+Oncology-specific MTR score calculated from the gnomAD (v2) cohort:
 - [MTR](#mtr)
 - [OncMTR](#oncmtr)
 
@@ -13,12 +12,13 @@ MTR
 
 ### Calculate original and AB_MEDIAN-filtered versions of MTR
 
+<br>
+
 - **Pre-generated data**: Snpeff annotations on all exons for all possible mutations
 ```
 out/snpeff_results/all_exons_mutations.snpeff_annotation.vcf
 ```
 
-#### Run:
 - Step 1. 
 ```
 cd modules/snpeff_annotation
