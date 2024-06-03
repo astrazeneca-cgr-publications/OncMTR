@@ -1,115 +1,45 @@
-# OncMTR
-Oncology-specific MTR score calculated from the gnomAD (v2) cohort:
-- [MTR](#mtr)
-- [OncMTR](#oncmtr)
+# Ancestry-specific MTR
 
+Ancestry-specific MTR scores are calculated in the same way as regular MTR scores, but as an input they require lists of ancestry-specific genetic variants.
 
-<br>
-<hr>
-<br>
+## Requirements
 
-MTR
-===
+* Input: VCF file with variants present in a given ancestry (cohort)
+* SnpEff 4.3t with GRCh38.86
+* Python packages in `requirements.txt` (you can install them at once using `pip install -r requirements.txt`)
 
-### Calculate original and AB_MEDIAN-filtered versions of MTR
+## Example usage
 
-<br>
+In this example, as an input we will use a VCF file with first 1000 variants present in the `NFE_440k` cohort (`cohort="NFE_440k"`): `data/snpeff_input/${cohort}.snpeff_input.All_chr.vcf`.
 
-- **Pre-generated data**: Snpeff annotations on all exons for all possible mutations
-```
-out/snpeff_results/all_exons_mutations.snpeff_annotation.vcf
-```
+The whole pipeline consist of three steps: running SnpEff to annotate the variants, parsing the results, and calculating ancestry-specific MTR scores.
 
-- Step 1. 
-```
-cd modules/snpeff_annotation
-sbatch ./submit.snpEff.gnomad_mutations.sh
+### Run SnpEff
 
-# Note - Expected input VCF (e.g. from gnomAD)]:
-data/gnomad_GRCh38/snpeff_input.gnomad_exons_mutations.pass.vcf
-```
+SnpEff version 4.3t is used to annotate variants using GRCh38.86 database. You can download it from [here](https://pcingola.github.io/SnpEff/download/). Java 1.8.0 is required to run SnpEff.
 
-
-- Step 2.
-```
-cd modules/snpeff_post_process
-sbatch ./submit_parse_snpeff_output.sh 
-```
-
-
-- Step 3. (same dir as in step 2)
-```
-python collate_hits_per_transcript.py  
-```
-
-
-- Step 4. 
-```
-cd modules/mtr
-
-./run_all.sh
-```
-
-or step by step
+The command to run SnpEff:
 
 ```
-python -u calculate_mtr_scores.py -d gnomad -w 31 -s mtr -f  no
-python -u calculate_mtr_scores.py -d gnomad -w 31 -s mtr-ab -f  yes
-
-# submitted via
-sbatch submit_mtr_calc.sh
+cohort="NFE_440k"
+java -Xmx4g -jar ${path_to_snpEff_jar} -noStats -v -t GRCh38.86 data/snpeff_input/${cohort}.snpeff_input.All_chr.vcf > out/snpeff_results/${cohort}_exons_mutations.snpeff_annotation.pass.vcf
 ```
 
-
-<br>
-
-
-OncMTR
-===
-
-### Compile OncMTR from MTR and MTR-AB results
-- compile_oncmtr.py
+### Parse SnpEff results
 
 ```
-# e.g.
-python compile_oncmtr.py -d gnomad -w 31
+cd MTR
+python -u parse_snpeff_output.py ../out/snpeff_results/${cohort}_exons_mutations.snpeff_annotation.pass.vcf
+python collate_hits_per_transcript.py ${cohort}
 ```
 
+### Calculate MTR scores
 
-
-### Annotate OncMTR signals with variants (e.g. clinvar/CGC) and create plots
-- annotate_oncmtr_signals.py
-
-```
-# e.g.
-python annotate_oncmtr_signals.py -d gnomad -w 31
-
-# or with sbatch
-sbatch submit_annotate_oncmtr_signals.sh
-```
-
-
-
-### Get genomic coordinates for each OncMTR score:
-- merge_oncmtr_scores_with_genomic_coords.py
+Here, we will calculate MTR scores for a window of 31 codons. Lists of all possible missense and synonymous variants are located at `out/snpeff_processed_out` and are stored in the `pickle` format. For the purpose of this exercise, lists only for seven transcripts are given there. Please contact us if you need the full lists (as they are over 200 MB each). 
 
 ```
-# e.g.
-python merge_oncmtr_scores_with_genomic_coords.py -d gnomad -w 31
-
-# or with sbatch
-sbatch submit_merge_with_genomic_coords.sh
+cd MTR
+python -u calculate_mtr_scores.py ${cohort}_exons_mutations.snpeff_annotation.pass $cohort 31
 ```
 
-### Get variant level percentile scores
-```
-sbatch submit_get_pct_scores.sh
-```
-
-
-
-
-### Get OncMTR distribution (based on various metrics) in CGC Tier 1/2 vs rest of exome
-```
-python plot_cgc_geneset_distributions.py
-```
+The ancestry-specific MTR scores for individual transcripts will be saved in `out/MTR-${cohort}-win31`.
