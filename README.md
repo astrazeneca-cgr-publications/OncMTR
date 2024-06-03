@@ -43,3 +43,4 @@ python -u calculate_mtr_scores.py ${cohort}_exons_mutations.snpeff_annotation.pa
 ```
 
 The ancestry-specific MTR scores for individual transcripts will be saved in `out/MTR-${cohort}-win31`.
+
