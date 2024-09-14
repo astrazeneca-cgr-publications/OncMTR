@@ -1,12 +1,23 @@
 # OncMTR
 Oncology-specific MTR score calculated from the gnomAD (v2) cohort:
+- [Citation](#citation)
 - [MTR](#mtr)
 - [OncMTR](#oncmtr)
 
 
 <br>
 <hr>
-<br>
+
+
+Citation
+========
+[Cancer-driving mutations are enriched in genic regions intolerant to germline variation](https://www.science.org/doi/full/10.1126/sciadv.abo6371)
+
+Dimitrios Vitsios<b><sup>†</sup></b>, Ryan S Dhindsa, Dorota Matelska, Jonathan Mitchell, Xuequing Zou, Joshua Armenia, Fengyuan Hu, Quanli Wang, Ben Sidders, Andrew R Harper, Slavé Petrovski<b><sup>†</sup></b>
+
+<b><i>Science Advances</b></i> Vol 8, Issue 34 (2022) [10.1126/sciadv.abo6371](10.1126/sciadv.abo6371)
+
+<br/>
 
 MTR
 ===
